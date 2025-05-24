@@ -2,9 +2,12 @@
 <html lang="en">
 <head>
     {% load static %}
-    <title>Blog Theme Switcher</title>
+    <title>Blog Theme Switcher Viewed posts</title>
     <link rel="stylesheet" href="{% static 'styles.css' %}">
     <style>
+
+                    /* cookies */
+
         body.light-mode {
             background-color: white;
             color: black;
@@ -24,6 +27,34 @@
     <a href="{% url 'set_theme_cookie' 'light' %}">Light Mode</a> |
     <a href="{% url 'delete_theme_cookie' %}">Reset Theme</a>
 
+
+                            <!-- session -->
+
+    <h2>Recently Viewed Posts:</h2>
+    <ul>
+        {% for post_id in viewed_posts %}
+            <li>Post ID: {{ post_id }}</li>
+        {% empty %}
+            <li>No posts viewed yet.</li>
+        {% endfor %}
+    </ul>
+
+    <hr>
+
+    <a href="{% url 'empty_viewed_posts' %}">Reset Viewed Posts</a>
+
+
+
+    <h2>Latest Searched Keywords:</h2>
+<ul>
+    {% for keyword in keywords %}
+        <li>{{ keyword }}</li>
+    {% empty %}
+        <li>No keywords entered yet.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'empty_keywords' %}">Reset Keywords</a>
 
 </body>
 </html>
