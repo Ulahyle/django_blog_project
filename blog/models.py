@@ -2,7 +2,8 @@ from django.db import models
 
 
 class SearchTag(models.Model):
-    tag_name = models.CharField(max_length=50)
+    tag_name = models.CharField(max_length=100)
+    describ = models.TextField()
 class PostAuthor(models.Model):
     first_name = models.TextField(null=False, blank=False)
     last_name = models.TextField(null=False, blank=False)
