@@ -1,0 +1,10 @@
+
+
+{% extends 'home_layout/_base.html' %}{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type= "submit">click me</button>
+
+    </form>
+{% endblock %}
