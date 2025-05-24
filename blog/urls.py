@@ -7,4 +7,5 @@ urlpatterns = [
     path('home/',views.home_page_view),
     path('search/',views.search_view),
     path('search/pages/tag_id/<str:tag_id>/',views.post_model_view),
+    path('home/pages/tag_id/<str:tag_id>/',views.post_model_view),
 ]

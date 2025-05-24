@@ -1,6 +1,12 @@
 
 
 {% extends 'home_layout/_base.html' %} {% block content %}
+    <form method="post">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button type= "submit">click me</button>
+    </form>
+    <h> tag category</h>
     {%  for item in tag_item %}
         <div>
             <a href="http://127.0.0.1:8000/blog/pages/tag_id/{{ item }}">{{ item }} </a>
