@@ -1,0 +1,9 @@
+
+
+{% extends 'home_layout/_base.html' %} {% block content %}
+    {%  for item in tag_item %}
+        <div>
+            <a href="http://127.0.0.1:8000/blog/pages/tag_id/{{ item }}">{{ item }} </a>
+        </div>
+    {% endfor %}
+{% endblock %}

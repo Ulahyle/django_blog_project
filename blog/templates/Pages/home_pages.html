@@ -1,0 +1,14 @@
+{% extends 'Pages/_base_pages.html' %} {% block content %}
+
+    {% for item in post_list %}
+        <h2>{{ item.title }}</h2>
+        <div>
+            <p>{{ item.description }}</p>
+        </div>
+        <div>
+            {% for author in item.authors.all %}
+                <h3>{{ author }}</h3>
+            {% endfor %}
+        </div>
+    {% endfor %}
+{% endblock %}
