@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <title>Blog Theme Switcher Viewed posts</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <style>
+
+                    /* cookies */
+
+        body.light-mode {
+            background-color: white;
+            color: black;
+        }
+
+        body.dark-mode {
+            background-color: #333;
+            color: white;
+        }
+    </style>
+</head>
+<body class="{% if theme == 'dark' %}dark-mode{% else %}light-mode{% endif %}">
+
+    <h1>Welcome to My Blog</h1>
+    <p>Switch between light and dark mode:</p>
+    <a href="{% url 'set_theme_cookie' 'dark' %}">Dark Mode</a> |
+    <a href="{% url 'set_theme_cookie' 'light' %}">Light Mode</a> |
+    <a href="{% url 'delete_theme_cookie' %}">Reset Theme</a>
+
+
+                            <!-- session -->
+
+    <h2>Recently Viewed Posts:</h2>
+    <ul>
+        {% for post_id in viewed_posts %}
+            <li>Post ID: {{ post_id }}</li>
+        {% empty %}
+            <li>No posts viewed yet.</li>
+        {% endfor %}
+    </ul>
+
+    <hr>
+
+    <a href="{% url 'empty_viewed_posts' %}">Reset Viewed Posts</a>
+
+
+
+    <h2>Latest Searched Keywords:</h2>
+<ul>
+    {% for keyword in keywords %}
+        <li>{{ keyword }}</li>
+    {% empty %}
+        <li>No keywords entered yet.</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'empty_keywords' %}">Reset Keywords</a>
+
+
+
+<h1>Recently Rated Posts</h1>
+    
+{% if ratings %}
+    <ul>
+        {% for post_id, rating in ratings.items %}
+            <li>Post {{ post_id }}: Rated {{ rating }}/5</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No ratings yet!</p>
+{% endif %}
+
+<a href="{% url 'empty_ratings' %}">Clear All Ratings</a>
+
+
+</body>
+</html>
+
