@@ -1,6 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import render , redirect
 from django.http import HttpResponse
-
+from django.contrib.auth import authenticate , login , logout
+from django.contrib.auth.decorators import login_required
+from blog.forms import LoginCustomForm , CustomUserCreationForm
 
 # Create your views here.
 
@@ -67,3 +69,62 @@ def get_recent_keywords(request):
 def empty_keywords(request):
     del request.session['keywords']
     return HttpResponse("data deleted!")
+
+
+
+
+
+                             #login
+
+def check_request_user(request):
+    return HttpResponse (f'{request.user} - {request.user.is_authenticated}')
+
+
+
+def check_request_user_template(request):
+    return render(request , 'check_request_user.html')
+
+
+
+def custom_login(request):
+    if request.method == 'POST':
+        form = LoginCustomForm(request.POST)
+        if form.is_valid():
+            username = form.cleaned_data.get('username')
+            password = form.cleaned_data.get('password')
+            user = authenticate(
+                request=request,
+                username=username,
+                password=password
+                )
+            if user:
+                login(request, user)
+                context = {'form': form, 'custom_message': f'welcome {user.username}'}
+            else:
+                context = {'form': form, 'custom_message': 'wrong data!'}
+        else:
+            context = {'form': form, 'custom_message': 'wrong form!'}
+        return render(request, 'custom_login.html', context=context)
+
+    form = LoginCustomForm()
+    context = {'form': form}
+    return render(request, 'custom_login.html', context=context)
+
+
+
+def custom_logout(request):
+    logout(request)
+    return redirect('login_page')
+
+
+
+def custom_sign_up(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('login_page')
+    else:
+        form = CustomUserCreationForm()
+    return render(request , 'custom_signup.html' , {'form':form})
+

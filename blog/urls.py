@@ -1,8 +1,12 @@
 from django.urls import path
 
 from blog.views import set_theme_cookie , get_theme_cookie , delete_theme_cookie
+
 from blog.views import track_viewed_posts , get_recent_views , empty_viewed_posts , track_keywords , get_recent_keywords , empty_keywords
 
+from blog.views import check_request_user , check_request_user_template , custom_login , custom_logout
+
+from blog.views import custom_sign_up
 
 urlpatterns = [
                        #cookies
@@ -21,6 +25,16 @@ urlpatterns = [
     path("track_keywords/<str:keyword>/", track_keywords, name="track_keywords"),
     path("get_recent_keywords/", get_recent_keywords, name="get_recent_keywords"),
     path("empty_keywords/" , empty_keywords , name="empty_keywords"),
+
+
+
+                         #login/logout      
+
+    path('check_request/' , check_request_user),
+    path('check_request_templates/' , check_request_user_template),
+    path('custom_login/' , custom_login , name = 'login_page'),
+    path('custom_logout/' , custom_logout , name = 'logout') ,
+    path('signup/' , custom_sign_up)                        
 
 
 ]
