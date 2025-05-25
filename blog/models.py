@@ -1,8 +1,15 @@
 from django.db import models
 
 
-class SearchTag(models.Model):
-    tag_name = models.CharField(max_length=100)
+class SearchSubject(models.Model):
+    CHOICES = (
+        ('tag_name', 'Name Tag'),
+        ('key_word', 'Key Word'),
+        ('title', 'Title'),
+    )
+    custom_field = models.CharField(max_length=50, choices=CHOICES, default='tag_name')
+class InputSearch(models.Model):
+    custom_input = models.CharField(max_length=50)
 class PostAuthor(models.Model):
     first_name = models.TextField(null=False, blank=False)
     last_name = models.TextField(null=False, blank=False)

@@ -4,6 +4,7 @@
     <form method="post">
         {% csrf_token %}
         {{form.as_p}}
+        {{form_subject.as_p}}
         <button type= "submit">click me</button>
     </form>
     <h> tag category</h>

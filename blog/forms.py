@@ -1,9 +1,13 @@
 
 
 from django import forms
-from blog.models import SearchTag
+from blog.models import SearchSubject, InputSearch
 
-class searchForm(forms.ModelForm):
+class searchFormSubject(forms.ModelForm):
     class Meta:
-        model = SearchTag
-        fields = ['tag_name']
+        model = SearchSubject
+        fields = ['custom_field']
+class SearchFormInput(forms.ModelForm):
+    class Meta:
+        model = InputSearch
+        fields = ['custom_input']
