@@ -19,4 +19,8 @@ class CustomUserCreationForm(UserCreationForm):
         email = self.cleaned_data["email"]
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("This email address is already in use.")
+<<<<<<< HEAD
         return email
+=======
+        return email
+>>>>>>> bf03400009667bd65c29be642ef1afdf541c19fd
