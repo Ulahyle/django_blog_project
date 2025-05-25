@@ -10,7 +10,8 @@ from blog.forms import LoginCustomForm , CustomUserCreationForm
                         #cookies
 
 def set_theme_cookie(request, theme):
-    response = HttpResponse(f"Theme set to {theme}")
+    # response = HttpResponse(f"Theme set to {theme}")
+    response = redirect("get_theme_cookie")
     response.set_cookie("theme", theme, max_age=86400)
     return response
 
@@ -22,7 +23,8 @@ def get_theme_cookie(request):
 
 
 def delete_theme_cookie(request):
-    response = HttpResponse("Theme is deleted succesfully!")
+    # response = HttpResponse("Theme is deleted succesfully!")
+    response = redirect("get_theme_cookie")
     response.delete_cookie("theme")  
     return response
 
@@ -47,7 +49,8 @@ def get_recent_views(request):
 
 def empty_viewed_posts(request):
     del request.session['viewed_posts']
-    return HttpResponse("data deleted!")
+    # return HttpResponse("data deleted!")
+    return redirect('get_recent_views')
 
 
 
@@ -68,8 +71,33 @@ def get_recent_keywords(request):
 
 def empty_keywords(request):
     del request.session['keywords']
-    return HttpResponse("data deleted!")
+    # return HttpResponse("data deleted!")
+    return redirect ('get_recent_keywords')
 
+
+
+def track_ratings(request, post_id, rating):
+
+
+    if rating < 0 or rating > 5:
+        return HttpResponse("Invalid rating! please give a rating between 1 and 5.", status=400)
+
+    ratings = request.session.get("ratings", {})
+    ratings[str(post_id)] = rating
+    request.session["ratings"] = ratings
+    request.session.set_expiry(86400)
+    # return redirect("get_recent_ratings")
+    return HttpResponse(f"Tracked Ratings: {ratings}")
+
+
+
+def get_recent_ratings(request):
+    ratings = request.session.get("ratings", {})
+    return render(request, "index.html", {"ratings": ratings})
+
+def empty_ratings(request):
+    del request.session["ratings"]
+    return redirect("get_recent_ratings")
 
 
 
@@ -127,4 +155,11 @@ def custom_sign_up(request):
     else:
         form = CustomUserCreationForm()
     return render(request , 'custom_signup.html' , {'form':form})
+
+
+
+
+from django.shortcuts import redirect, render
+from django.http import HttpResponse
+
 

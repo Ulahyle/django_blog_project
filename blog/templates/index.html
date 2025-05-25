@@ -56,6 +56,23 @@
 
 <a href="{% url 'empty_keywords' %}">Reset Keywords</a>
 
+
+
+<h1>Recently Rated Posts</h1>
+    
+{% if ratings %}
+    <ul>
+        {% for post_id, rating in ratings.items %}
+            <li>Post {{ post_id }}: Rated {{ rating }}/5</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No ratings yet!</p>
+{% endif %}
+
+<a href="{% url 'empty_ratings' %}">Clear All Ratings</a>
+
+
 </body>
 </html>
 
