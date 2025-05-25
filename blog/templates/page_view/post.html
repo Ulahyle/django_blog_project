@@ -1,0 +1,20 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'theme/style.css' %}">
+    <title>Posts</title>
+</head>
+<body>
+    <h1>{{ post.title }}</h1>
+    <p> This is post {{ post }}</p>
+    <p><strong>Description:</strong> {{ post.description }}</p>
+    <p><strong>Author:</strong> {{ post.wrote_by.username }}</p>
+    <p><strong>Published:</strong> {{ post.published_at }}</p>
+    <a href="{% url 'edit' post.id %}">Edit this post</a>
+
+    <a class="button" href="{% url 'topic' %}">back to Posts</a>
+</body>
+</html>
