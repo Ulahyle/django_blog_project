@@ -1,9 +1,9 @@
-# <<<<<<< HEAD
-from django.shortcuts import render
+from django.shortcuts import render , redirect
 from django.http import HttpResponse,HttpResponseRedirect
+from django.contrib.auth import authenticate , login , logout
 from blog.models import PostAuthor, CustomPost
 
-from blog.forms import searchFormSubject,SearchFormInput
+from blog.forms import searchFormSubject,SearchFormInput , LoginCustomForm , CustomUserCreationForm
 
 # Create your views here.
 
@@ -51,14 +51,6 @@ def search_view(request):
     else:
         form = SearchFormInput()
         return render(request,'home_layout/search.html', {"form": form})
-# =======
-from django.shortcuts import render , redirect
-from django.http import HttpResponse
-from django.contrib.auth import authenticate , login , logout
-from django.contrib.auth.decorators import login_required
-from blog.forms import LoginCustomForm , CustomUserCreationForm
-
-# Create your views here.
 
 
                         #cookies
@@ -213,4 +205,3 @@ def custom_sign_up(request):
 
 
 
-# >>>>>>> feature/session-cookies
