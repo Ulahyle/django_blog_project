@@ -15,13 +15,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-<<<<<<< HEAD
+# <<<<<<< HEAD
 from django.urls import path, include
 from blog.urls import urlpatterns as blog_urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('blog/', include(blog_urls)),
-=======
+    ]
+# =======
 from django.urls import path , include
 
 from blog.urls import urlpatterns as blog_urlpatterns
@@ -29,5 +30,5 @@ from blog.urls import urlpatterns as blog_urlpatterns
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('blog/' , include(blog_urlpatterns)),
->>>>>>> feature/session-cookies
+# >>>>>>> feature/session-cookies
 ]

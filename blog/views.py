@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+# <<<<<<< HEAD
 from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 from blog.models import PostAuthor, CustomPost
@@ -51,7 +51,7 @@ def search_view(request):
     else:
         form = SearchFormInput()
         return render(request,'home_layout/search.html', {"form": form})
-=======
+# =======
 from django.shortcuts import render , redirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate , login , logout
@@ -72,7 +72,7 @@ def set_theme_cookie(request, theme):
 
 def get_theme_cookie(request):
     theme = request.COOKIES.get("theme", "light")
-    return render(request , 'index.html' , {"theme" : theme})
+    return render(request , 'cookie_session/index.html' , {"theme" : theme})
 
 
 
@@ -97,7 +97,7 @@ def track_viewed_posts(request, post_id):
 
 def get_recent_views(request):
     viewed_posts = request.session.get("viewed_posts", [])
-    return render(request, "index.html", {"viewed_posts": viewed_posts})
+    return render(request, "cookie_session/index.html", {"viewed_posts": viewed_posts})
 
 
 
@@ -120,7 +120,7 @@ def track_keywords(request, keyword):
 
 def get_recent_keywords(request):
     keywords = request.session.get("keywords", [])
-    return render(request, "index.html", {"keywords": keywords})
+    return render(request, "cookie_session/index.html", {"keywords": keywords})
 
 
 def empty_keywords(request):
@@ -147,7 +147,7 @@ def track_ratings(request, post_id, rating):
 
 def get_recent_ratings(request):
     ratings = request.session.get("ratings", {})
-    return render(request, "index.html", {"ratings": ratings})
+    return render(request, "cookie_session/index.html", {"ratings": ratings})
 
 def empty_ratings(request):
     del request.session["ratings"]
@@ -213,4 +213,4 @@ def custom_sign_up(request):
 
 
 
->>>>>>> feature/session-cookies
+# >>>>>>> feature/session-cookies
