@@ -1,6 +1,7 @@
-from django.shortcuts import render
+from django.shortcuts import render ,redirect
 from django.http import HttpResponse,HttpResponseRedirect
 from blog.models import PostAuthor, CustomPost
+from  .forms import ContactUsForm
 
 from blog.forms import searchForm
 
@@ -26,3 +27,15 @@ def search_view(request):
     else:
         form = searchForm()
         return render(request,'home_layout/search.html', {"form": form})
+    
+def Contact_us_view(request):
+    if request.method == 'POST':
+        print(request.POST)
+        form = ContactUsForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # return redirect('contact_success.html')
+            return render(request,'contact_success.html')
+    else:
+        form = ContactUsForm()
+        return render(request, 'contact_us.html',{'form':form})
