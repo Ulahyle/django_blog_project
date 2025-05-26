@@ -17,5 +17,15 @@ class CustomPost(models.Model):
     rate = models.IntegerField(null=False, blank=False)
     tag = models.CharField(max_length=100, null=False, blank=False)
     authors = models.ManyToManyField(PostAuthor)
+    
+class ContactUs(models.Model):
+    name = models.CharField(max_length=100)
+    email = models.EmailField()
+    subject = models.CharField(max_length=200)
+    message = models.TextField()
+    created_at = models.DateField(auto_now_add=True)
+    def __str__(self):
+        return f"{self.name} - {self.subject}"
+        
 
 
