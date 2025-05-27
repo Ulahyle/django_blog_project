@@ -40,7 +40,7 @@ urlpatterns = [
     # User Authentication
     path('check_request/', check_request_user),
     path('check_request_templates/', check_request_user_template),
-    path('login/', custom_login, name='login'),
-    path('logout/', custom_logout, name='logout'),
+    path('login/', custom_login, name='login_page'),
+    path('logout/', custom_logout, name='logout_page'),
     path('signup/', custom_sign_up, name='signup'),
 ]

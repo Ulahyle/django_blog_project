@@ -61,11 +61,7 @@ def check_request_user(request):
 def check_request_user_template(request):
     return render(request , 'user_status/check_user_request.html')
 
-from django.shortcuts import render
-from django.http import HttpResponse,HttpResponseRedirect
-from blog.models import PostAuthor, CustomPost
 
-from blog.forms import searchFormSubject,SearchFormInput
 
 # Create your views here.
 
@@ -213,7 +209,7 @@ def empty_ratings(request):
 
 
 
-                             #login
+#login
 
 # def check_request_user(request):
 #     return HttpResponse (f'{request.user} - {request.user.is_authenticated}')
@@ -225,125 +221,49 @@ def empty_ratings(request):
 
 
 
-# def custom_login(request):
-#     if request.method == 'POST':
-#         form = LoginCustomForm(request.POST)
-#         if form.is_valid():
-#             username = form.cleaned_data.get('username')
-#             password = form.cleaned_data.get('password')
-#             user = authenticate(
-#             request=request,
-#             username=username,
-#             password=password,
-#             )
-
-#             if user:
-#                 login(request, user)
-#                 return redirect('home')
-
-#                 request=request,
-#                 username=username,
-#                 password=password
-#                 )
-#             if user:
-#                 login(request, user)
-#                 context = {'form': form, 'custom_message': f'welcome {user.username}'}
-
-#             else:
-#                 context = {'form': form, 'custom_message': 'wrong data!'}
-#         else:
-#             context = {'form': form, 'custom_message': 'wrong form!'}
-
-#         return render(request, 'user_status/custom_login.html', context=context)
-
-#     form = LoginCustomForm()
-#     context = {'form': form}
-#     return render(request, 'user_status/custom_login.html', context=context)
-
-# def custom_logout(request):
-#     logout(request)
-#     return redirect('login')
-
-#         return render(request, 'custom_login.html', context=context)
-
-#     form = LoginCustomForm()
-#     context = {'form': form}
-#     return render(request, 'custom_login.html', context=context)
-
-
-
-# def custom_logout(request):
-#     logout(request)
-#     return redirect('login_page')
-
-
-
-
-# def custom_sign_up(request):
-#     if request.method == 'POST':
-#         form = CustomUserCreationForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-
-#             return redirect('login')
-#     else:
-#         form = CustomUserCreationForm()
-#     return render(request , 'user_status/custom_signup.html' , {'form':form})
-
-#             return redirect('login_page')
-#     else:
-#         form = CustomUserCreationForm()
-#     return render(request , 'custom_signup.html' , {'form':form})
-
-
-from django.shortcuts import render, redirect, HttpResponse
-from django.contrib.auth import login, logout, authenticate
-from blog.forms import LoginCustomForm, CustomUserCreationForm
-
-
-# Check user request
-def check_request_user(request):
-    return HttpResponse(f'{request.user} - {request.user.is_authenticated}')
-
-def check_request_user_template(request):
-    return render(request, 'check_request_user.html')
-
-
-# Custom login view
 def custom_login(request):
     if request.method == 'POST':
         form = LoginCustomForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
-            user = authenticate(request=request, username=username, password=password)
-
+            user = authenticate(
+                request=request,
+                username=username,
+                password=password
+                )
             if user:
                 login(request, user)
-                return redirect('home')
+                context = {'form': form, 'custom_message': f'welcome {user.username}'}
             else:
-                context = {'form': form, 'custom_message': 'Wrong credentials!'}
+                context = {'form': form, 'custom_message': 'wrong data!'}
         else:
-            context = {'form': form, 'custom_message': 'Invalid form submission!'}
-        return render(request, 'user_status/custom_login.html', context=context)
+            context = {'form': form, 'custom_message': 'wrong form!'}
+        return render(request, 'custom_login.html', context=context)
 
     form = LoginCustomForm()
-    return render(request, 'user_status/custom_login.html', {'form': form})
+    context = {'form': form}
+    return render(request, 'custom_login.html', context=context)
 
 
-# Custom logout view
+
 def custom_logout(request):
     logout(request)
-    return redirect('login')
+    return redirect('login_page')
 
 
-# Custom signup view
+
 def custom_sign_up(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('login')
+            return redirect('login_page')
     else:
         form = CustomUserCreationForm()
-    return render(request, 'user_status/custom_signup.html', {'form': form})
+    return render(request , 'custom_signup.html' , {'form':form})
+
+
+
+
+
