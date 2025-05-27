@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-<<<<<<< HEAD
+
 class Posts(models.Model):
     title = models.CharField(max_length=100)
     description = models.TextField(null=True, blank=True)
@@ -17,7 +17,7 @@ class Posts(models.Model):
 
     def __str__(self):
         return f"{self.title}"
-=======
+
 class SearchSubject(models.Model):
     CHOICES = (
         ('tag_name', 'Name Tag'),
@@ -42,4 +42,4 @@ class CustomPost(models.Model):
     authors = models.ManyToManyField(PostAuthor)
 
 
->>>>>>> bf03400009667bd65c29be642ef1afdf541c19fd
+

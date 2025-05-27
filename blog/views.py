@@ -1,9 +1,13 @@
-<<<<<<< HEAD
+
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
-from blog.forms import LoginCustomForm, CustomUserCreationForm, Write
+from django.http import HttpResponseRedirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
-from blog.models import Posts
+from blog.forms import (
+    LoginCustomForm, CustomUserCreationForm, Write,
+    searchFormSubject, SearchFormInput
+)
+from blog.models import Posts, CustomPost , PostAuthor
 
 
 def home_view(request):
@@ -56,8 +60,7 @@ def check_request_user(request):
 
 def check_request_user_template(request):
     return render(request , 'user_status/check_user_request.html')
-=======
-<<<<<<< HEAD
+
 from django.shortcuts import render
 from django.http import HttpResponse,HttpResponseRedirect
 from blog.models import PostAuthor, CustomPost
@@ -110,12 +113,7 @@ def search_view(request):
     else:
         form = SearchFormInput()
         return render(request,'home_layout/search.html', {"form": form})
-=======
-from django.shortcuts import render , redirect
-from django.http import HttpResponse
-from django.contrib.auth import authenticate , login , logout
-from django.contrib.auth.decorators import login_required
-from blog.forms import LoginCustomForm , CustomUserCreationForm
+
 
 # Create your views here.
 
@@ -131,7 +129,7 @@ def set_theme_cookie(request, theme):
 
 def get_theme_cookie(request):
     theme = request.COOKIES.get("theme", "light")
-    return render(request , 'index.html' , {"theme" : theme})
+    return render(request , 'cookie_session/index.html' , {"theme" : theme})
 
 
 
@@ -156,7 +154,7 @@ def track_viewed_posts(request, post_id):
 
 def get_recent_views(request):
     viewed_posts = request.session.get("viewed_posts", [])
-    return render(request, "index.html", {"viewed_posts": viewed_posts})
+    return render(request, "cookie_session/index.html", {"viewed_posts": viewed_posts})
 
 
 
@@ -179,7 +177,7 @@ def track_keywords(request, keyword):
 
 def get_recent_keywords(request):
     keywords = request.session.get("keywords", [])
-    return render(request, "index.html", {"keywords": keywords})
+    return render(request, "cookie_session/index.html", {"keywords": keywords})
 
 
 def empty_keywords(request):
@@ -206,7 +204,7 @@ def track_ratings(request, post_id, rating):
 
 def get_recent_ratings(request):
     ratings = request.session.get("ratings", {})
-    return render(request, "index.html", {"ratings": ratings})
+    return render(request, "cookie_session/index.html", {"ratings": ratings})
 
 def empty_ratings(request):
     del request.session["ratings"]
@@ -217,90 +215,135 @@ def empty_ratings(request):
 
                              #login
 
+# def check_request_user(request):
+#     return HttpResponse (f'{request.user} - {request.user.is_authenticated}')
+
+
+
+# def check_request_user_template(request):
+#     return render(request , 'check_request_user.html')
+
+
+
+# def custom_login(request):
+#     if request.method == 'POST':
+#         form = LoginCustomForm(request.POST)
+#         if form.is_valid():
+#             username = form.cleaned_data.get('username')
+#             password = form.cleaned_data.get('password')
+#             user = authenticate(
+#             request=request,
+#             username=username,
+#             password=password,
+#             )
+
+#             if user:
+#                 login(request, user)
+#                 return redirect('home')
+
+#                 request=request,
+#                 username=username,
+#                 password=password
+#                 )
+#             if user:
+#                 login(request, user)
+#                 context = {'form': form, 'custom_message': f'welcome {user.username}'}
+
+#             else:
+#                 context = {'form': form, 'custom_message': 'wrong data!'}
+#         else:
+#             context = {'form': form, 'custom_message': 'wrong form!'}
+
+#         return render(request, 'user_status/custom_login.html', context=context)
+
+#     form = LoginCustomForm()
+#     context = {'form': form}
+#     return render(request, 'user_status/custom_login.html', context=context)
+
+# def custom_logout(request):
+#     logout(request)
+#     return redirect('login')
+
+#         return render(request, 'custom_login.html', context=context)
+
+#     form = LoginCustomForm()
+#     context = {'form': form}
+#     return render(request, 'custom_login.html', context=context)
+
+
+
+# def custom_logout(request):
+#     logout(request)
+#     return redirect('login_page')
+
+
+
+
+# def custom_sign_up(request):
+#     if request.method == 'POST':
+#         form = CustomUserCreationForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+
+#             return redirect('login')
+#     else:
+#         form = CustomUserCreationForm()
+#     return render(request , 'user_status/custom_signup.html' , {'form':form})
+
+#             return redirect('login_page')
+#     else:
+#         form = CustomUserCreationForm()
+#     return render(request , 'custom_signup.html' , {'form':form})
+
+
+from django.shortcuts import render, redirect, HttpResponse
+from django.contrib.auth import login, logout, authenticate
+from blog.forms import LoginCustomForm, CustomUserCreationForm
+
+
+# Check user request
 def check_request_user(request):
-    return HttpResponse (f'{request.user} - {request.user.is_authenticated}')
-
-
+    return HttpResponse(f'{request.user} - {request.user.is_authenticated}')
 
 def check_request_user_template(request):
-    return render(request , 'check_request_user.html')
+    return render(request, 'check_request_user.html')
 
 
->>>>>>> bf03400009667bd65c29be642ef1afdf541c19fd
-
+# Custom login view
 def custom_login(request):
     if request.method == 'POST':
         form = LoginCustomForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data.get('username')
             password = form.cleaned_data.get('password')
-            user = authenticate(
-<<<<<<< HEAD
-            request=request,
-            username=username,
-            password=password,
-            )
+            user = authenticate(request=request, username=username, password=password)
 
             if user:
                 login(request, user)
                 return redirect('home')
-=======
-                request=request,
-                username=username,
-                password=password
-                )
-            if user:
-                login(request, user)
-                context = {'form': form, 'custom_message': f'welcome {user.username}'}
->>>>>>> bf03400009667bd65c29be642ef1afdf541c19fd
             else:
-                context = {'form': form, 'custom_message': 'wrong data!'}
+                context = {'form': form, 'custom_message': 'Wrong credentials!'}
         else:
-            context = {'form': form, 'custom_message': 'wrong form!'}
-<<<<<<< HEAD
+            context = {'form': form, 'custom_message': 'Invalid form submission!'}
         return render(request, 'user_status/custom_login.html', context=context)
 
     form = LoginCustomForm()
-    context = {'form': form}
-    return render(request, 'user_status/custom_login.html', context=context)
+    return render(request, 'user_status/custom_login.html', {'form': form})
 
+
+# Custom logout view
 def custom_logout(request):
     logout(request)
     return redirect('login')
-=======
-        return render(request, 'custom_login.html', context=context)
-
-    form = LoginCustomForm()
-    context = {'form': form}
-    return render(request, 'custom_login.html', context=context)
 
 
-
-def custom_logout(request):
-    logout(request)
-    return redirect('login_page')
-
-
->>>>>>> bf03400009667bd65c29be642ef1afdf541c19fd
-
+# Custom signup view
 def custom_sign_up(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-<<<<<<< HEAD
             return redirect('login')
     else:
         form = CustomUserCreationForm()
-    return render(request , 'user_status/custom_signup.html' , {'form':form})
-=======
-            return redirect('login_page')
-    else:
-        form = CustomUserCreationForm()
-    return render(request , 'custom_signup.html' , {'form':form})
-
-
-
-
->>>>>>> feature/session-cookies
->>>>>>> bf03400009667bd65c29be642ef1afdf541c19fd
+    return render(request, 'user_status/custom_signup.html', {'form': form})
