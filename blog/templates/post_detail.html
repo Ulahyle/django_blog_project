@@ -4,10 +4,9 @@
     <title>{{ post.title }}</title>
 </head>
 <body>
-    <h1>{{ post.title }}</h1>
-    <p>{{ post.content }}</p>
-    <p>Category: {{ post.category }}</p>
-    <p>Published on: {{ post.created_at }}</p>
+    <h1>{{ post.description }}</h1>
+        <p>Published at: {{ post.published_at }}</p>
+        <p>Author: {{ post.wrote_by.username }}</p>
     <a href="{% url 'get_recommendations' %}">Back to recommendations</a>
 </body>
 </html>
