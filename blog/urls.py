@@ -11,6 +11,11 @@ from blog.views import check_request_user , check_request_user_template , custom
 from blog.views import custom_sign_up
 
 
+from blog.views import get_recommendations , get_keyword_based_recommendations , get_rating_based_recommendations
+
+
+from blog.views import post_detail
+
 
 urlpatterns = [
                        #cookies
@@ -48,6 +53,13 @@ urlpatterns = [
 
 
 
+    path("recommendations/", get_recommendations, name="get_recommendations"),
+    path("recommendations_keywords/", get_keyword_based_recommendations , name="get_keyword_based_recommendations"),
+    path("recommendations_ratings/", get_rating_based_recommendations, name="get_rating_based_recommendations"),
 
+
+
+
+    path("post/<int:post_id>/", post_detail, name="post_detail"),
 ]
 

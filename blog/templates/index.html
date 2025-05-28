@@ -73,6 +73,22 @@
 <a href="{% url 'empty_ratings' %}">Clear All Ratings</a>
 
 
+
+<!-- recomendation -->
+
+{% if recommendations %}
+    <h3>Recommended Posts</h3>
+    <ul>
+        {% for post in recommendations %}
+            <li><a href="{% url 'post_detail' post.id %}">{{ post.title }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No recommendations available yet.</p>
+{% endif %}
+
+
+
 </body>
 </html>
 

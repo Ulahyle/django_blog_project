@@ -1,8 +1,11 @@
-from django.shortcuts import render , redirect
+from django.shortcuts import render , redirect , get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth import authenticate , login , logout
 from django.contrib.auth.decorators import login_required
 from blog.forms import LoginCustomForm , CustomUserCreationForm
+from blog.models import Post
+
+
 
 # Create your views here.
 
@@ -159,3 +162,99 @@ def custom_sign_up(request):
 
 
 
+#recomendation partttttttttttt
+
+
+
+# def get_recommendations(request):
+#     print("✅ get_recommendations() function is running!")
+
+#     viewed_posts = request.session.get("viewed_posts", [])
+#     keywords = request.session.get("keywords", [])
+#     ratings = request.session.get("ratings", {})
+
+#     print(f"Viewed Posts: {viewed_posts}")
+#     print(f"Keywords: {keywords}")
+#     print(f"Ratings: {ratings}")
+
+#     recommendations = Post.objects.none() 
+
+#     if viewed_posts:
+#         viewed_categories = list(Post.objects.filter(id__in=viewed_posts).values_list("category", flat=True).distinct())
+#         if viewed_categories:
+#             recommendations = Post.objects.filter(category__in=viewed_categories).exclude(id__in=viewed_posts)[:5]
+
+#     return render(request, "index.html", {"recommendations": recommendations})
+
+
+def get_recommendations(request):
+
+    viewed_posts = request.session.get("viewed_posts", [])
+    keywords = request.session.get("keywords", [])
+    ratings = request.session.get("ratings", {})
+
+    print(f"Viewed Posts: {viewed_posts}")
+    print(f"Keywords: {keywords}")
+    print(f"Ratings: {ratings}")
+
+    recommendations = []
+
+    if viewed_posts:
+        viewed_categories = list(Post.objects.filter(id__in=viewed_posts).values_list("category", flat=True).distinct())
+        if viewed_categories:
+            category_recommendations = list(Post.objects.filter(category__in=viewed_categories).exclude(id__in=viewed_posts)[:5])
+            recommendations.extend(category_recommendations)
+
+
+    if keywords:
+        keyword_recommendations = list(Post.objects.filter(tags__name__in=keywords).distinct()[:5])
+        recommendations.extend(keyword_recommendations)
+
+
+    if ratings:
+        high_rated_posts = [post_id for post_id, rating in ratings.items() if rating >= 4]
+        if high_rated_posts:
+            rating_recommendations = list(Post.objects.filter(id__in=high_rated_posts)[:5])
+            recommendations.extend(rating_recommendations)
+
+
+    recommendations = list(set(recommendations))[:5]
+
+    print(f"🧐 Final Recommendations Sent to Template: {recommendations}")
+
+    return render(request, "index.html", {"recommendations": recommendations})
+
+
+
+
+def get_keyword_based_recommendations(request):
+    keywords = request.session.get("keywords", [])
+
+    recommendations = Post.objects.none()
+
+    if keywords:
+        recommendations = Post.objects.filter(tags__name__in=keywords).distinct()[:5]
+
+    return render(request, "index.html", {"recommendations": recommendations})
+
+
+def get_rating_based_recommendations(request):
+    ratings = request.session.get("ratings", {})
+
+    recommendations = Post.objects.none()
+
+    if ratings:
+        high_rated_posts = [post_id for post_id, rating in ratings.items() if rating >= 4]
+        if high_rated_posts:
+            recommendations = Post.objects.filter(id__in=high_rated_posts)[:5]
+
+    return render(request, "index.html", {"recommendations": recommendations})
+
+
+
+
+
+
+def post_detail(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    return render(request, "post_detail.html", {"post": post})
