@@ -1,16 +1,24 @@
 
 
 {% extends 'home_layout/_base.html' %} {% block content %}
-    <form method="post">
-        {% csrf_token %}
-        {{form.as_p}}
-        {{form_subject.as_p}}
-        <button type= "submit">click me</button>
-    </form>
+    <div class="shadow-sm p-1 mb-2 bg-body-tertiary rounded">
+        <form method="post">
+            {% csrf_token %}
+            {{form.as_p}}
+            {{form_subject.as_p}}
+            <button type= "submit">click me</button>
+        </form>
+    </div>
     <h> tag category</h>
+
     {%  for item in tag_item %}
-        <div>
-            <a href="http://127.0.0.1:8000/blog/pages/tag_id/{{ item }}">{{ item }} </a>
-        </div>
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="http://127.0.0.1:8000/blog/pages/tag_id/{{ item }}">
+                {{ item }}</a>
+          </li>
+        </ul>
+
+
     {% endfor %}
 {% endblock %}
