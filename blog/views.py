@@ -9,6 +9,8 @@ from blog.forms import (
 )
 from blog.models.models import Posts, CustomPost
 
+post_id_view = list()
+keyword_search_view = list()
 def home_page_view(request):
     tag_item = list()
     for item in CustomPost.objects.all():
@@ -33,10 +35,13 @@ def home_page_view(request):
         return render(request, 'home_layout/home_home.html', context)
 def post_model_view(request,tag_id):
     post_list = CustomPost.objects.filter(tag = tag_id)
+    for item in post_list:
+        post_id_view.append(item.id)
     return render(request,'Pages/home_pages.html', {"post_list": post_list})
 
 def key_word_view(request,input_id):
     post_list = CustomPost.objects.filter(description__icontains=input_id)
+    keyword_search_view.append(input_id)
     return render(request, 'Pages/home_pages.html', {"post_list": post_list})
 
 def title_view(request,input_id):
@@ -115,11 +120,11 @@ def search_view(request):
 # Create your views here.
 
 
-                        #cookies
+#cookies
 
 def set_theme_cookie(request, theme):
     # response = HttpResponse(f"Theme set to {theme}")
-    response = redirect("get_theme_cookie")
+    response = redirect("cookie_session_handling")
     response.set_cookie("theme", theme, max_age=86400)
     return response
 
@@ -132,39 +137,36 @@ def get_theme_cookie(request):
 
 def delete_theme_cookie(request):
     # response = HttpResponse("Theme is deleted succesfully!")
-    response = redirect("get_theme_cookie")
+    response = redirect("cookie_session_handling")
     response.delete_cookie("theme")  
     return response
 
 
-                         #sessions
+#sessions
 
-def track_viewed_posts(request, post_id):
+def track_viewed_posts(request):
     viewed_posts = request.session.get("viewed_posts", [])
-    viewed_posts.insert(0, post_id)
+    viewed_posts.insert(0, post_id_view)
     viewed_posts = viewed_posts[:5]
     request.session["viewed_posts"] = viewed_posts
     request.session.set_expiry(86400)
     return HttpResponse(f"Viewed posts: {viewed_posts}")
 
-
-
 def get_recent_views(request):
     viewed_posts = request.session.get("viewed_posts", [])
     return render(request, "cookie_session/index.html", {"viewed_posts": viewed_posts})
 
-
-
 def empty_viewed_posts(request):
     del request.session['viewed_posts']
+    post_id_view = list()
     # return HttpResponse("data deleted!")
-    return redirect('get_recent_views')
+    return redirect('cookie_session_handling')
 
 
 
-def track_keywords(request, keyword):
+def track_keywords(request):
     keywords = request.session.get("keywords", [])
-    keywords.insert(0, keyword)
+    keywords.insert(0, keyword_search_view)
     keywords = keywords[:5]
     request.session["keywords"] = keywords
     request.session.set_expiry(86400)
@@ -179,8 +181,9 @@ def get_recent_keywords(request):
 
 def empty_keywords(request):
     del request.session['keywords']
+    keyword_search_view = list()
     # return HttpResponse("data deleted!")
-    return redirect ('get_recent_keywords')
+    return redirect ('cookie_session_handling')
 
 
 

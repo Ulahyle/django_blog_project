@@ -6,6 +6,9 @@
             <p>{{ item.description }}</p>
         </div>
         <div>
+            <p>{{ item.rate }}</p>
+        </div>
+        <div>
             {% for author in item.authors.all %}
                 <h3>{{ author }}</h3>
             {% endfor %}

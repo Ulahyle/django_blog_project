@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <main>
+        <h2>Latest Searched Keywords:</h2>
+        <ul>
+            {% for keyword in keywords %}
+                <li>{{ keyword }}</li>
+            {% empty %}
+                <li>No keywords entered yet.</li>
+            {% endfor %}
+        </ul>
+    </main>
+
+</body>
+</html>

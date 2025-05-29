@@ -31,30 +31,14 @@
                             <!-- session -->
 
     <h2>Recently Viewed Posts:</h2>
-    <ul>
-        {% for post_id in viewed_posts %}
-            <li>Post ID: {{ post_id }}</li>
-        {% empty %}
-            <li>No posts viewed yet.</li>
-        {% endfor %}
-    </ul>
-
-    <hr>
-
+    <a href="{% url "track_viewed_posts" %}">display Recently Viewed Posts</a>
     <a href="{% url 'empty_viewed_posts' %}">Reset Viewed Posts</a>
 
 
 
     <h2>Latest Searched Keywords:</h2>
-<ul>
-    {% for keyword in keywords %}
-        <li>{{ keyword }}</li>
-    {% empty %}
-        <li>No keywords entered yet.</li>
-    {% endfor %}
-</ul>
-
-<a href="{% url 'empty_keywords' %}">Reset Keywords</a>
+    <a href="{% url "track_keywords" %}">display Recent keyword searched</a>
+    <a href="{% url 'empty_keywords' %}">Reset Keywords</a>
 
 
 
