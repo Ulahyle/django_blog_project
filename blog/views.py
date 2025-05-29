@@ -1,9 +1,67 @@
-<<<<<<< HEAD
-from django.shortcuts import render
-from django.http import HttpResponse,HttpResponseRedirect
-from blog.models import PostAuthor, CustomPost
 
-from blog.forms import searchFormSubject,SearchFormInput
+from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
+from django.http import HttpResponseRedirect
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required
+from blog.forms import (
+    LoginCustomForm, CustomUserCreationForm, Write,
+    searchFormSubject, SearchFormInput
+)
+from blog.models import Posts, CustomPost , PostAuthor
+
+
+def home_view(request):
+    return render(request, 'page_view/home.html')
+
+def topic_view(request):
+    posts = Posts.objects.all()
+    return render(request, 'page_view/topic.html', {'posts': posts})
+
+def post_view(request, post_id):
+    post = get_object_or_404(Posts, id=post_id)
+    return render(request, 'page_view/post.html', {'post': post})
+
+@login_required(login_url='/login/')
+def write_view(request):
+    if request.method == 'POST':
+        form = Write(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data['title']
+            description = form.cleaned_data['description']
+            Posts.objects.create(title=title, description=description, wrote_by=request.user)
+            return redirect('/home/')
+    else:
+        form = Write()
+    return render(request, 'page_view/write.html', {'form': form})
+
+@login_required(login_url='/login/')
+def edit_post_view(request, post_id):
+    post = get_object_or_404(Posts, id=post_id)
+    
+    if post.wrote_by != request.user:
+        return HttpResponse("you don't have the permission to change this post!", status=403)
+
+    if request.method == 'POST':
+        post.title = request.POST.get('title')
+        post.description = request.POST.get('description')
+        post.save()
+        return redirect('home')
+    
+    return render(request, 'page_view/edit.html', {'post': post})
+
+@login_required(login_url='/login/')
+def report_post_view(request, post_id):
+    post = get_object_or_404(Posts, id=post_id)
+    return HttpResponse(f"the post {post.title} was reported by{request.user.username}")
+
+#user_status
+def check_request_user(request):
+    return HttpResponse (f'{request.user} - {request.user.is_authenticated}')
+
+def check_request_user_template(request):
+    return render(request , 'user_status/check_user_request.html')
+
+
 
 # Create your views here.
 
@@ -51,12 +109,7 @@ def search_view(request):
     else:
         form = SearchFormInput()
         return render(request,'home_layout/search.html', {"form": form})
-=======
-from django.shortcuts import render , redirect
-from django.http import HttpResponse
-from django.contrib.auth import authenticate , login , logout
-from django.contrib.auth.decorators import login_required
-from blog.forms import LoginCustomForm , CustomUserCreationForm
+
 
 # Create your views here.
 
@@ -72,7 +125,7 @@ def set_theme_cookie(request, theme):
 
 def get_theme_cookie(request):
     theme = request.COOKIES.get("theme", "light")
-    return render(request , 'index.html' , {"theme" : theme})
+    return render(request , 'cookie_session/index.html' , {"theme" : theme})
 
 
 
@@ -97,7 +150,7 @@ def track_viewed_posts(request, post_id):
 
 def get_recent_views(request):
     viewed_posts = request.session.get("viewed_posts", [])
-    return render(request, "index.html", {"viewed_posts": viewed_posts})
+    return render(request, "cookie_session/index.html", {"viewed_posts": viewed_posts})
 
 
 
@@ -120,7 +173,7 @@ def track_keywords(request, keyword):
 
 def get_recent_keywords(request):
     keywords = request.session.get("keywords", [])
-    return render(request, "index.html", {"keywords": keywords})
+    return render(request, "cookie_session/index.html", {"keywords": keywords})
 
 
 def empty_keywords(request):
@@ -147,7 +200,7 @@ def track_ratings(request, post_id, rating):
 
 def get_recent_ratings(request):
     ratings = request.session.get("ratings", {})
-    return render(request, "index.html", {"ratings": ratings})
+    return render(request, "cookie_session/index.html", {"ratings": ratings})
 
 def empty_ratings(request):
     del request.session["ratings"]
@@ -156,15 +209,15 @@ def empty_ratings(request):
 
 
 
-                             #login
+#login
 
-def check_request_user(request):
-    return HttpResponse (f'{request.user} - {request.user.is_authenticated}')
+# def check_request_user(request):
+#     return HttpResponse (f'{request.user} - {request.user.is_authenticated}')
 
 
 
-def check_request_user_template(request):
-    return render(request , 'check_request_user.html')
+# def check_request_user_template(request):
+#     return render(request , 'check_request_user.html')
 
 
 
@@ -213,4 +266,4 @@ def custom_sign_up(request):
 
 
 
->>>>>>> feature/session-cookies
+
