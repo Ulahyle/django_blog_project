@@ -12,12 +12,23 @@ from blog.views import (
 
 urlpatterns = [
     # Core Views
-    path('home/', views.home_view, name='home'),
+    path('', views.home_page_view, name='home'),
+    path('pages/tag_id/<str:tag_id>/', views.post_model_view),
+    path('search/pages/tag_id/<str:tag_id>/', views.post_model_view),
+    path('pages/tag_id/<str:tag_id>/', views.post_model_view),
+    path('pages/key_word/<str:input_id>/', views.key_word_view),
+    path('pages/title/<str:input_id>/', views.title_view),
+    # ------------------------------------------------------------------------
     path('topic/', views.topic_view, name='topic'),
     path('post/<int:post_id>/', views.post_view, name='post'),
     path('write/', views.write_view, name='write'),
-    path('edit/<int:post_id>/', views.edit_post_view, name='edit'),
-    path('report/<int:post_id>/', views.report_post_view, name='report'),
+    path('signup/', custom_sign_up, name='signup'),
+    path('login/signup/', custom_sign_up),
+    path('login/', custom_login, name='login_page'),
+    path('logout/', custom_logout, name='logout_page'),
+    path('edit/<str:tag_id>/', views.edit_post_view, name='edit'),
+    path('report/<str:tag_id>/', views.report_post_view, name='report'),
+
 
     # Cookies
     path('set_theme_cookie/<str:theme>/', set_theme_cookie, name="set_theme_cookie"),
@@ -40,7 +51,7 @@ urlpatterns = [
     # User Authentication
     path('check_request/', check_request_user),
     path('check_request_templates/', check_request_user_template),
-    path('login/', custom_login, name='login_page'),
-    path('logout/', custom_logout, name='logout_page'),
-    path('signup/', custom_sign_up, name='signup'),
+
+
+
 ]

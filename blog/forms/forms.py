@@ -1,7 +1,7 @@
 
 
 from django import forms
-from blog.models import SearchSubject, InputSearch
+from blog.models.models import SearchSubject, InputSearch
 
 class searchFormSubject(forms.ModelForm):
     class Meta:

@@ -7,63 +7,7 @@ from blog.forms import (
     LoginCustomForm, CustomUserCreationForm, Write,
     searchFormSubject, SearchFormInput
 )
-from blog.models import Posts, CustomPost , PostAuthor
-
-
-def home_view(request):
-    return render(request, 'page_view/home.html')
-
-def topic_view(request):
-    posts = Posts.objects.all()
-    return render(request, 'page_view/topic.html', {'posts': posts})
-
-def post_view(request, post_id):
-    post = get_object_or_404(Posts, id=post_id)
-    return render(request, 'page_view/post.html', {'post': post})
-
-@login_required(login_url='/login/')
-def write_view(request):
-    if request.method == 'POST':
-        form = Write(request.POST)
-        if form.is_valid():
-            title = form.cleaned_data['title']
-            description = form.cleaned_data['description']
-            Posts.objects.create(title=title, description=description, wrote_by=request.user)
-            return redirect('/home/')
-    else:
-        form = Write()
-    return render(request, 'page_view/write.html', {'form': form})
-
-@login_required(login_url='/login/')
-def edit_post_view(request, post_id):
-    post = get_object_or_404(Posts, id=post_id)
-    
-    if post.wrote_by != request.user:
-        return HttpResponse("you don't have the permission to change this post!", status=403)
-
-    if request.method == 'POST':
-        post.title = request.POST.get('title')
-        post.description = request.POST.get('description')
-        post.save()
-        return redirect('home')
-    
-    return render(request, 'page_view/edit.html', {'post': post})
-
-@login_required(login_url='/login/')
-def report_post_view(request, post_id):
-    post = get_object_or_404(Posts, id=post_id)
-    return HttpResponse(f"the post {post.title} was reported by{request.user.username}")
-
-#user_status
-def check_request_user(request):
-    return HttpResponse (f'{request.user} - {request.user.is_authenticated}')
-
-def check_request_user_template(request):
-    return render(request , 'user_status/check_user_request.html')
-
-
-
-# Create your views here.
+from blog.models.models import Posts, CustomPost
 
 def home_page_view(request):
     tag_item = list()
@@ -98,6 +42,63 @@ def key_word_view(request,input_id):
 def title_view(request,input_id):
     post_list = CustomPost.objects.filter(title__icontains=input_id)
     return render(request, 'Pages/home_pages.html', {"post_list": post_list})
+# --------------------------------------------------------------------------------------------------
+def home_view(request):
+    return render(request, 'page_view/home.html')
+
+def topic_view(request):
+    posts = Posts.objects.all()
+    return render(request, 'page_view/topic.html', {'posts': posts})
+
+def post_view(request, post_id):
+    post = get_object_or_404(Posts, id=post_id)
+    return render(request, 'page_view/post.html', {'post': post})
+
+@login_required(login_url='/login/')
+def write_view(request):
+    if request.method == 'POST':
+        form = Write(request.POST)
+        if form.is_valid():
+            title = form.cleaned_data['title']
+            description = form.cleaned_data['description']
+            Posts.objects.create(title=title, description=description, wrote_by=request.user)
+            return redirect('/home/')
+    else:
+        form = Write()
+    return render(request, 'page_view/write.html', {'form': form})
+
+@login_required(login_url='/login/')
+def edit_post_view(request, tag_id):
+    post = get_object_or_404(Posts, id=tag_id)
+    
+    if post.wrote_by != request.user:
+        return HttpResponse("you don't have the permission to change this post!", status=403)
+
+    if request.method == 'POST':
+        post.title = request.POST.get('title')
+        post.description = request.POST.get('description')
+        post.save()
+        return redirect('home')
+    
+    return render(request, 'page_view/edit.html', {'post': post})
+
+@login_required(login_url='/login/')
+def report_post_view(request, post_id):
+    post = get_object_or_404(Posts, id=post_id)
+    return HttpResponse(f"the post {post.title} was reported by{request.user.username}")
+
+#user_status
+def check_request_user(request):
+    return HttpResponse (f'{request.user} - {request.user.is_authenticated}')
+
+def check_request_user_template(request):
+    return render(request , 'user_status/check_user_request.html')
+
+
+
+# Create your views here.
+
+
 def search_view(request):
     if request.method == "POST":
         print(request.POST)
@@ -236,7 +237,8 @@ def custom_login(request):
                 login(request, user)
                 context = {'form': form, 'custom_message': f'welcome {user.username}'}
             else:
-                context = {'form': form, 'custom_message': 'wrong data!'}
+                context = {'form': form, 'custom_message': 'Please sign uo first!'}
+                return redirect('signup/')
         else:
             context = {'form': form, 'custom_message': 'wrong form!'}
         return render(request, 'custom_login.html', context=context)

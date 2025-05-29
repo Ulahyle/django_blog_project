@@ -9,16 +9,34 @@
             <button type= "submit">click me</button>
         </form>
     </div>
+    <div>
+        <a href="{% url "signup" %}">
+            <button type="submit">SignUp</button>
+        </a>
+    </div>
+    <div>
+        <a href="{% url "login_page" %}">
+            <button type="submit">Login</button>
+        </a>
+    </div>
+    <div>
+       <a href="{% url "logout_page" %}">
+            <button type="submit">LogOut</button>
+        </a>
+    </div>
+    <div>
+       <a href="{% url "write" %}">
+            <button type="submit">WriteNewPost</button>
+        </a>
+    </div>
     <h> tag category</h>
 
     {%  for item in tag_item %}
         <ul class="nav">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="http://127.0.0.1:8000/blog/pages/tag_id/{{ item }}">
+            <a class="nav-link active" aria-current="page" href="http://127.0.0.1:8000/pages/tag_id/{{ item }}">
                 {{ item }}</a>
           </li>
         </ul>
-
-
     {% endfor %}
 {% endblock %}
