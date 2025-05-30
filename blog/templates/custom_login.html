@@ -19,16 +19,6 @@
                 <button type="submit" class="btn btn-primary">Login!</button>
             </div>
         </form>
-
-        {% if user.is_authenticated %}
-            <div class="text-center mt-4">
-                <p class="text-success">Welcome, {{ request.user.username }}!!!</p>
-                <form method="post" action="{% url 'logout' %}">
-                    {% csrf_token %}
-                    <button type="submit" class="btn btn-danger">Logout</button>
-                </form>
-            </div>
-        {% endif %}
     </div>
 </body>
 </html>

@@ -238,6 +238,7 @@ def custom_login(request):
             if user:
                 login(request, user)
                 context = {'form': form, 'custom_message': f'welcome {user.username}'}
+                return render(request, 'custom_login.html', context=context)
             else:
                 context = {'form': form, 'custom_message': 'Please sign uo first!'}
                 return redirect('signup/')
