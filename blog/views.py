@@ -5,12 +5,13 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from blog.forms import (
     LoginCustomForm, CustomUserCreationForm, Write,
-    searchFormSubject, SearchFormInput
+    searchFormSubject, SearchFormInput,VoteByUserForm,
 )
 from blog.models.models import Posts, CustomPost
 
 post_id_view = list()
 keyword_search_view = list()
+recent_rate_session = list()
 def home_page_view(request):
     tag_item = list()
     for item in CustomPost.objects.all():
@@ -37,8 +38,27 @@ def post_model_view(request,tag_id):
     post_list = CustomPost.objects.filter(tag = tag_id)
     for item in post_list:
         post_id_view.append(item.id)
-    return render(request,'Pages/home_pages.html', {"post_list": post_list})
-
+    if request.method == "POST":
+        input_rate = VoteByUserForm(request.POST)
+        if input_rate.is_valid():
+            recent_post_rate = dict()
+            recent_post_rate["post_id"] = input_rate.cleaned_data.get('id_field')
+            recent_post_rate["post_rate"] = input_rate.cleaned_data.get('custom_field')
+            recent_rate_session.append(recent_post_rate)
+            print(input_rate.save().custom_field)
+            print(input_rate.save().id_field)
+            context = {
+                'form': input_rate,
+                "post_list": post_list
+            }
+            return render(request,'Pages/home_pages.html', context)
+    else:
+        input_rate = VoteByUserForm()
+        context = {
+            'form': input_rate,
+            "post_list": post_list
+        }
+        return render(request, 'Pages/home_pages.html', context)
 def key_word_view(request,input_id):
     post_list = CustomPost.objects.filter(description__icontains=input_id)
     keyword_search_view.append(input_id)
@@ -104,22 +124,6 @@ def check_request_user_template(request):
 # Create your views here.
 
 
-def search_view(request):
-    if request.method == "POST":
-        print(request.POST)
-        form = searchFormSubject(request.POST)
-        if form.is_valid():
-            tag_id = form.cleaned_data.get('tag_name')
-            return HttpResponseRedirect(f'pages/tag_id/{tag_id}/')
-        #return render(request,'home_layout/search.html', {"form": form})
-    else:
-        form = SearchFormInput()
-        return render(request,'home_layout/search.html', {"form": form})
-
-
-# Create your views here.
-
-
 #cookies
 
 def set_theme_cookie(request, theme):
@@ -172,8 +176,6 @@ def track_keywords(request):
     request.session.set_expiry(86400)
     return HttpResponse(f"Tracked Keywords: {keywords}")
 
-
-
 def get_recent_keywords(request):
     keywords = request.session.get("keywords", [])
     return render(request, "cookie_session/index.html", {"keywords": keywords})
@@ -187,15 +189,10 @@ def empty_keywords(request):
 
 
 
-def track_ratings(request, post_id, rating):
-
-
-    if rating < 0 or rating > 5:
-        return HttpResponse("Invalid rating! please give a rating between 1 and 5.", status=400)
-
+def track_ratings(request):
     ratings = request.session.get("ratings", {})
-    ratings[str(post_id)] = rating
-    request.session["ratings"] = ratings
+    print(recent_rate_session)
+    request.session["ratings"] = recent_rate_session
     request.session.set_expiry(86400)
     # return redirect("get_recent_ratings")
     return HttpResponse(f"Tracked Ratings: {ratings}")
@@ -208,7 +205,9 @@ def get_recent_ratings(request):
 
 def empty_ratings(request):
     del request.session["ratings"]
-    return redirect("get_recent_ratings")
+    recent_rate_session = list()
+    return redirect("cookie_session_handling")
+
 
 
 

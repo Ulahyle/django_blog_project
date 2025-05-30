@@ -19,6 +19,13 @@
         <a href="http://127.0.0.1:8000/report/{{ item.tag }}">
             <button type="submit">ReportPost</button>
         </a>
+        <form method="post">
+            {% csrf_token %}
+            <label for="id_field"></label>
+            <input type="text" name="id_field" id="id_field" value="{{ item.id }}">
+            {{ form.custom_field }}
+        <button type="submit">submit rate</button>
+        </form>
 
     {% endfor %}
     <div>

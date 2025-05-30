@@ -43,7 +43,7 @@ urlpatterns = [
     #path("get_recent_keywords/", get_recent_keywords, name="get_recent_keywords"),
     path("empty_keywords/", empty_keywords, name="empty_keywords"),
     
-    path("track_ratings/<int:post_id>/<int:rating>/", track_ratings, name="track_rating"),
+    path("track_ratings/", track_ratings, name="track_rating"),
     path("get_recent_ratings/", get_recent_ratings, name="get_recent_ratings"),
     path("empty_ratings/", empty_ratings, name="empty_ratings"),
 

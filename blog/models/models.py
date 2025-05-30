@@ -27,6 +27,16 @@ class SearchSubject(models.Model):
     custom_field = models.CharField(max_length=50, choices=CHOICES, default='tag_name')
 class InputSearch(models.Model):
     custom_input = models.CharField(max_length=50)
+class VoteByUser(models.Model):
+    CHOICES = (
+        ('1', '1 star'),
+        ('2', '2 stars'),
+        ('3', '3 stars'),
+        ('4', '4 stars'),
+        ('5', '5 stars'),
+    )
+    custom_field = models.CharField(max_length=50, choices=CHOICES)
+    id_field = models.IntegerField(null=False, blank=False,default=0)
 class PostAuthor(models.Model):
     first_name = models.TextField(null=False, blank=False)
     last_name = models.TextField(null=False, blank=False)

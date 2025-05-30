@@ -40,23 +40,15 @@
     <a href="{% url "track_keywords" %}">display Recent keyword searched</a>
     <a href="{% url 'empty_keywords' %}">Reset Keywords</a>
 
+    <h1>Recently Rated Posts</h1>
+    <a href="{% url "track_rating" %}">display recent rated post</a>
+    <a href="{% url 'empty_ratings' %}">Clear All Ratings</a>
 
-
-<h1>Recently Rated Posts</h1>
-    
-{% if ratings %}
-    <ul>
-        {% for post_id, rating in ratings.items %}
-            <li>Post {{ post_id }}: Rated {{ rating }}/5</li>
-        {% endfor %}
-    </ul>
-{% else %}
-    <p>No ratings yet!</p>
-{% endif %}
-
-<a href="{% url 'empty_ratings' %}">Clear All Ratings</a>
-
-
+    <div>
+        <a href="{% url "home" %}">
+            <button type="submit">return to home page</button>
+        </a>
+    </div>
 </body>
 </html>
 

@@ -8,8 +8,8 @@
     <main>
         <h2>Latest Searched Keywords:</h2>
         <ul>
-            {% for keyword in keywords %}
-                <li>{{ keyword }}</li>
+            {% for item in ratings %}
+                <li>{{ item }}</li>
             {% empty %}
                 <li>No keywords entered yet.</li>
             {% endfor %}
