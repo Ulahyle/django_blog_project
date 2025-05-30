@@ -5,9 +5,9 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
 from blog.forms import (
     LoginCustomForm, CustomUserCreationForm, Write,
-    searchFormSubject, SearchFormInput,VoteByUserForm,
+    searchFormSubject, SearchFormInput,VoteByUserForm,ContactUsForm
 )
-from blog.models.models import Posts, CustomPost
+from blog.models.models import Posts, CustomPost,Contactmodel
 
 post_id_view = list()
 keyword_search_view = list()
@@ -76,7 +76,7 @@ def topic_view(request):
     return render(request, 'page_view/topic.html', {'posts': posts})
 
 def post_view(request, post_id):
-    post = get_object_or_404(Posts, id=post_id)
+    post = get_object_or_404(CustomPost, id=post_id)
     return render(request, 'page_view/post.html', {'post': post})
 
 @login_required(login_url='/login/')
@@ -86,17 +86,17 @@ def write_view(request):
         if form.is_valid():
             title = form.cleaned_data['title']
             description = form.cleaned_data['description']
-            Posts.objects.create(title=title, description=description, wrote_by=request.user)
-            return redirect('/home/')
+            CustomPost.objects.create(title=title, description=description, authors=request.user)
+            return redirect('home/')
     else:
         form = Write()
     return render(request, 'page_view/write.html', {'form': form})
 
 @login_required(login_url='/login/')
 def edit_post_view(request, tag_id):
-    post = get_object_or_404(Posts, id=tag_id)
+    post = get_object_or_404(CustomPost, id=tag_id)
     
-    if post.wrote_by != request.user:
+    if post.authors != request.user:
         return HttpResponse("you don't have the permission to change this post!", status=403)
 
     if request.method == 'POST':
@@ -109,7 +109,7 @@ def edit_post_view(request, tag_id):
 
 @login_required(login_url='/login/')
 def report_post_view(request, post_id):
-    post = get_object_or_404(Posts, id=post_id)
+    post = get_object_or_404(CustomPost, id=post_id)
     return HttpResponse(f"the post {post.title} was reported by{request.user.username}")
 
 #user_status
@@ -266,6 +266,20 @@ def custom_sign_up(request):
     else:
         form = CustomUserCreationForm()
     return render(request , 'custom_signup.html' , {'form':form})
+
+def custom_contactus(request):
+    if request.method == 'POST':
+        contact_form = ContactUsForm(request.POST)
+        if contact_form.is_valid():
+            #contact_form.save()
+            Contactmodel.objects.create(name=contact_form.cleaned_data.get('name'),
+                                     email=contact_form.cleaned_data.get('email'),
+                                     subject=contact_form.cleaned_data.get('subject'),
+                                     message=contact_form.cleaned_data.get('message'))
+        return render(request, 'ContactUs/contactus_.html', {'form': contact_form})
+    else:
+        contact_form = ContactUsForm()
+        return render(request, 'ContactUs/contactus_.html', {'form': contact_form})
 
 
 

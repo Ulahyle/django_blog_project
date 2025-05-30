@@ -4,10 +4,11 @@ __all__= [
     "Write",
     'searchFormSubject',
     'SearchFormInput',
-    'VoteByUserForm'
+    'VoteByUserForm',
+    'ContactUsForm'
 ]
 
 from blog.forms.log_in_out import LoginCustomForm
 from blog.forms.signup import CustomUserCreationForm
 from blog.forms.write import Write
-from blog.forms.forms import searchFormSubject , SearchFormInput,VoteByUserForm
+from blog.forms.forms import searchFormSubject , SearchFormInput,VoteByUserForm,ContactUsForm

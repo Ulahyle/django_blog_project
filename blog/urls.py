@@ -50,6 +50,7 @@ urlpatterns = [
     # User Authentication
     path('check_request/', check_request_user),
     path('check_request_templates/', check_request_user_template),
+    path('contactus/', views.custom_contactus, name='contactus'),
 
 
 
