@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <title>Blog Theme Switcher Viewed posts</title>
+    <link rel="stylesheet" href="{% static 'greetings/styles.css' %}">
+    <style>
+
+                    /* cookies */
+
+        body.light-mode {
+            background-color: white;
+            color: black;
+        }
+
+        body.dark-mode {
+            background-color: #333;
+            color: white;
+        }
+    </style>
+</head>
+<body class="{% if theme == 'dark' %}dark-mode{% else %}light-mode{% endif %}">
+
+    <h1>Welcome to My Blog</h1>
+    <p>Switch between light and dark mode:</p>
+    <a href="{% url 'set_theme_cookie' 'dark' %}">Dark Mode</a> |
+    <a href="{% url 'set_theme_cookie' 'light' %}">Light Mode</a> |
+    <a href="{% url 'delete_theme_cookie' %}">Reset Theme</a>
+
+
+                            <!-- session -->
+
+    <h2>Recently Viewed Posts:</h2>
+    <a href="{% url "track_viewed_posts" %}">display Recently Viewed Posts</a>
+    <a href="{% url 'empty_viewed_posts' %}">Reset Viewed Posts</a>
+
+
+
+    <h2>Latest Searched Keywords:</h2>
+    <a href="{% url "track_keywords" %}">display Recent keyword searched</a>
+    <a href="{% url 'empty_keywords' %}">Reset Keywords</a>
+
+    <h1>Recently Rated Posts</h1>
+    <a href="{% url "track_rating" %}">display recent rated post</a>
+    <a href="{% url 'empty_ratings' %}">Clear All Ratings</a>
+
+    <div>
+        <a href="{% url "home" %}">
+            <button type="submit">return to home page</button>
+        </a>
+    </div>
+</body>
+</html>
+

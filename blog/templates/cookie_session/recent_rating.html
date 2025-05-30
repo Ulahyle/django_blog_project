@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <main>
+        <h2>Latest rating posts:</h2>
+        <ul>
+            {% for keyword in keywords %}
+                <li>{{ keyword }}</li>
+            {% empty %}
+                <li>No keywords entered yet.</li>
+            {% endfor %}
+        </ul>
+        <div>
+            <a href="{% url "home" %}">
+                <button type="submit">return to home page</button>
+            </a>
+        </div>
+    </main>
+</body>
+</html>

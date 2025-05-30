@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <main>
+        <h2>Recently Viewed Posts:</h2>
+        <ul>
+            {% for post_id in viewed_posts %}
+                <li>Post ID: {{ post_id }}</li>
+            {% empty %}
+                <li>No posts viewed yet.</li>
+            {% endfor %}
+        </ul>
+
+    <hr>
+    <a href="{% url 'empty_viewed_posts' %}">Reset Viewed Posts</a>
+    </main>
+
+</body>
+</html>
