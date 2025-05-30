@@ -93,8 +93,8 @@ def write_view(request):
     return render(request, 'page_view/write.html', {'form': form})
 
 @login_required(login_url='/login/')
-def edit_post_view(request, tag_id):
-    post = get_object_or_404(CustomPost, id=tag_id)
+def edit_post_view(request, post_id):
+    post = get_object_or_404(CustomPost, id=post_id)
     
     if post.authors != request.user:
         return HttpResponse("you don't have the permission to change this post!", status=403)

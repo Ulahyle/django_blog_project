@@ -26,8 +26,8 @@ urlpatterns = [
     path('login/signup/', custom_sign_up),
     path('login/', custom_login, name='login_page'),
     path('logout/', custom_logout, name='logout_page'),
-    path('edit/<str:tag_id>/', views.edit_post_view, name='edit'),
-    path('report/<str:tag_id>/', views.report_post_view, name='report'),
+    path('edit/<int:post_id>/', views.edit_post_view, name='edit'),
+    path('report/<int:post_id>/', views.report_post_view, name='report'),
     # ------------------------------------------------------------------------------
     # Cookies
     path('set_theme_cookie/<str:theme>/', set_theme_cookie, name="set_theme_cookie"),
