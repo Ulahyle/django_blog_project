@@ -1,17 +1,51 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>blog</title>
+    <link rel="stylesheet" href="{% static 'style/bootstrap.min.css' %}">
+    <title></title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .signup-container {
+            max-width: 400px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 <body>
-    <h1>blog</h1>
-    <form method="POST">
-        {% csrf_token %}
-        {{form.as_p}}
-        <button type="submit">send!</button>
-    </form>
+<div class="container">
+    <div class="signup-container">
+        <h2 class="text-center mb-4">Create a New Post</h2>
+        <form method="post">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label class="form-label">Title</label>
+                {{ form.title }}
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Description</label>
+                {{ form.description }}
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Rate</label>
+                {{ form.rate }}
+            </div>
+            <div class="mb-3">
+                <label class="form-label">SubjectField</label>
+                {{ form.tag }}
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Submit</button>
+        </form>
+    </div>
+</div>
     <a class="button" href="{% url 'home' %}">back to home</a>
 </body>
 </html>

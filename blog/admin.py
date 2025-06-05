@@ -1,9 +1,9 @@
 from django.contrib import admin
 
-from blog.models.models import Posts
+from blog.models.models import CustomPost
 
 
-admin.site.register(Posts)
+admin.site.register(CustomPost)
 
 from blog.models.models import Contactmodel
 

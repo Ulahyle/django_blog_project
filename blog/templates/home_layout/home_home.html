@@ -1,43 +1,38 @@
 
 
-{% extends 'home_layout/_base.html' %} {% block content %}
-    <div class="shadow-sm p-1 mb-2 bg-body-tertiary rounded">
-        <form method="post">
-            {% csrf_token %}
-            {{form.as_p}}
-            {{form_subject.as_p}}
-            <button type= "submit">click me</button>
-        </form>
+{% extends 'home_layout/_base.html' %} {% block content %}{% load static %}
+    <div class="shadow-sm p-3 mb-5 bg-body-tertiary rounded">
+        <nav class="navbar navbar-expand-lg bg-body-tertiary">
+            <div class="container-fluid">
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    {%  for item in tag_item %}
+                        <ul class="navbar-nav">
+                        <li class="nav-item">
+                          <a class="nav-link active" aria-current="page" href="http://127.0.0.1:8000/pages/tag_id/{{ item }}">
+                              {{ item }}</a>
+                        </li>
+                    {% endfor %}
+                </div>
+            </div>
+                <form class="d-flex" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    {{ form_subject.as_p }}
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+        </nav>
     </div>
-    <div>
-        <a href="{% url "signup" %}">
-            <button type="submit">SignUp</button>
-        </a>
+    <div class="d-flex justify-content-center">
+        <div class="d-flex flex-column mb-3">
+            {% for item in article %}
+                <div class="d-flex flex-row mb-3">
+                    <a class="navbar-brand">
+                    <img src="{% static 'blog_icon/arrow-right-square-fill.svg' %}"
+                             alt="Logo" width="25" height="20" class="d-inline-block align-text-top"></a>
+                    <h2>{{ item.title }}</h2>
+                </div>
+                    <p>{{ item.description }}</p>
+            {% endfor %}
+        </div>
     </div>
-    <div>
-        <a href="{% url "login_page" %}">
-            <button type="submit">Login</button>
-        </a>
-    </div>
-    <div>
-       <a href="{% url "logout_page" %}">
-            <button type="submit">LogOut</button>
-        </a>
-    </div>
-    <div>
-       <a href="{% url "write" %}">
-            <button type="submit">WriteNewPost</button>
-        </a>
-    </div>
-
-    <h> tag category</h>
-
-    {%  for item in tag_item %}
-        <ul class="nav">
-          <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="http://127.0.0.1:8000/pages/tag_id/{{ item }}">
-                {{ item }}</a>
-          </li>
-        </ul>
-    {% endfor %}
 {% endblock %}

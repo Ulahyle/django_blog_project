@@ -6,7 +6,6 @@ from blog.views import (
     track_viewed_posts, get_recent_views, empty_viewed_posts,
     track_keywords, get_recent_keywords, empty_keywords,
     track_ratings, get_recent_ratings, empty_ratings,
-    check_request_user, check_request_user_template,
     custom_login, custom_logout, custom_sign_up
 )
 
@@ -19,8 +18,6 @@ urlpatterns = [
     path('pages/key_word/<str:input_id>/', views.key_word_view),
     path('pages/title/<str:input_id>/', views.title_view),
     # ------------------------------------------------------------------------
-    path('topic/', views.topic_view, name='topic'),
-    path('post/<int:post_id>/', views.post_view, name='post'),
     path('write/', views.write_view, name='write'),
     path('signup/', custom_sign_up, name='signup'),
     path('login/signup/', custom_sign_up),
@@ -48,8 +45,6 @@ urlpatterns = [
     path("empty_ratings/", empty_ratings, name="empty_ratings"),
 
     # User Authentication
-    path('check_request/', check_request_user),
-    path('check_request_templates/', check_request_user_template),
     path('contactus/', views.custom_contactus, name='contactus'),
 
 

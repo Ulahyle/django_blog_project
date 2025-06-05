@@ -2,12 +2,13 @@
 from django.shortcuts import render, redirect, HttpResponse, get_object_or_404
 from django.http import HttpResponseRedirect
 from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from blog.forms import (
     LoginCustomForm, CustomUserCreationForm, Write,
     searchFormSubject, SearchFormInput,VoteByUserForm,ContactUsForm
 )
-from blog.models.models import Posts, CustomPost,Contactmodel
+from blog.models.models import CustomPost,Contactmodel,ReportPost
 
 post_id_view = list()
 keyword_search_view = list()
@@ -21,18 +22,19 @@ def home_page_view(request):
         form_subject = searchFormSubject(request.POST)
         if form_Input.is_valid() or form_subject.is_valid():
             input_id = form_Input.cleaned_data.get('custom_input')
-            if form_subject.save().custom_field == 'tag_name':
+            if form_subject.save().Tag_field == 'tag_name':
                 return HttpResponseRedirect(f'pages/tag_id/{input_id}/')
-            if form_subject.save().custom_field == 'key_word':
+            if form_subject.save().Tag_field == 'key_word':
                 return HttpResponseRedirect(f'pages/key_word/{input_id}/')
-            if form_subject.save().custom_field == 'title':
+            if form_subject.save().Tag_field == 'title':
                 return HttpResponseRedirect(f'pages/title/{input_id}/')
     else:
         form_Input = SearchFormInput()
         form_subject = searchFormSubject()
         context = {'form': form_Input,
                    'form_subject': form_subject,
-                   'tag_item': set(tag_item)}
+                   'tag_item': set(tag_item),
+                   'article' : CustomPost.objects.all}
         return render(request, 'home_layout/home_home.html', context)
 def post_model_view(request,tag_id):
     post_list = CustomPost.objects.filter(tag = tag_id)
@@ -51,45 +53,39 @@ def post_model_view(request,tag_id):
                 'form': input_rate,
                 "post_list": post_list
             }
-            return render(request,'Pages/home_pages.html', context)
+            return render(request, 'home_layout/home_pages.html', context)
     else:
         input_rate = VoteByUserForm()
         context = {
             'form': input_rate,
             "post_list": post_list
         }
-        return render(request, 'Pages/home_pages.html', context)
+        return render(request, 'home_layout/home_pages.html', context)
 def key_word_view(request,input_id):
     post_list = CustomPost.objects.filter(description__icontains=input_id)
     keyword_search_view.append(input_id)
-    return render(request, 'Pages/home_pages.html', {"post_list": post_list})
+    return render(request, 'Pages/templates/home_layout/home_pages.html', {"post_list": post_list})
 
 def title_view(request,input_id):
     post_list = CustomPost.objects.filter(title__icontains=input_id)
-    return render(request, 'Pages/home_pages.html', {"post_list": post_list})
+    return render(request, 'Pages/templates/home_layout/home_pages.html', {"post_list": post_list})
 # --------------------------------------------------------------------------------------------------
-def home_view(request):
-    return render(request, 'page_view/home.html')
-
-def topic_view(request):
-    posts = Posts.objects.all()
-    return render(request, 'page_view/topic.html', {'posts': posts})
-
-def post_view(request, post_id):
-    post = get_object_or_404(CustomPost, id=post_id)
-    return render(request, 'page_view/post.html', {'post': post})
 
 @login_required(login_url='/login/')
 def write_view(request):
+    print(request.user.first_name)
     if request.method == 'POST':
         form = Write(request.POST)
         if form.is_valid():
             title = form.cleaned_data['title']
             description = form.cleaned_data['description']
-            CustomPost.objects.create(title=title, description=description, authors=request.user)
-            return redirect('home/')
+            rate = form.cleaned_data['rate']
+            tag = form.cleaned_data['tag']
+            CustomPost.objects.create(title=title, description=description,rate = rate, tag = tag, authors = request.user)
+            return render(request, 'page_view/write.html', {'form': form})
     else:
         form = Write()
+        print(request.user.first_name)
     return render(request, 'page_view/write.html', {'form': form})
 
 @login_required(login_url='/login/')
@@ -110,18 +106,10 @@ def edit_post_view(request, post_id):
 @login_required(login_url='/login/')
 def report_post_view(request, post_id):
     post = get_object_or_404(CustomPost, id=post_id)
+    ReportPost.objects.create(post_title = CustomPost.objects.get(id=post_id).title,
+                              reporter_id = request.user)
     return HttpResponse(f"the post {post.title} was reported by{request.user.username}")
 
-#user_status
-def check_request_user(request):
-    return HttpResponse (f'{request.user} - {request.user.is_authenticated}')
-
-def check_request_user_template(request):
-    return render(request , 'user_status/check_user_request.html')
-
-
-
-# Create your views here.
 
 
 #cookies
@@ -133,7 +121,9 @@ def set_theme_cookie(request, theme):
     return response
 
 
+
 def get_theme_cookie(request):
+
     theme = request.COOKIES.get("theme", "light")
     return render(request , 'cookie_session/index.html' , {"theme" : theme})
 
@@ -149,32 +139,42 @@ def delete_theme_cookie(request):
 #sessions
 
 def track_viewed_posts(request):
-    viewed_posts = request.session.get("viewed_posts", [])
-    viewed_posts.insert(0, post_id_view)
-    viewed_posts = viewed_posts[:5]
-    request.session["viewed_posts"] = viewed_posts
-    request.session.set_expiry(86400)
-    return HttpResponse(f"Viewed posts: {viewed_posts}")
+    if request.user.is_superuser:
+        viewed_posts = request.session.get("viewed_posts", [])
+        viewed_posts.insert(0, post_id_view)
+        viewed_posts = viewed_posts[:5]
+        request.session["viewed_posts"] = viewed_posts
+        request.session.set_expiry(86400)
+        return HttpResponse(f"Viewed posts: {viewed_posts}")
+    else:
+        return HttpResponse('YOU ONT HAVE ACCESS')
 
 def get_recent_views(request):
     viewed_posts = request.session.get("viewed_posts", [])
     return render(request, "cookie_session/index.html", {"viewed_posts": viewed_posts})
 
 def empty_viewed_posts(request):
-    del request.session['viewed_posts']
-    post_id_view = list()
-    # return HttpResponse("data deleted!")
-    return redirect('cookie_session_handling')
+    if request.user.is_superuser:
+        del request.session['viewed_posts']
+        post_id_view = list()
+        # return HttpResponse("data deleted!")
+        return redirect('cookie_session_handling')
+    else:
+        return HttpResponse('YOU ONT HAVE ACCESS')
 
 
 
 def track_keywords(request):
-    keywords = request.session.get("keywords", [])
-    keywords.insert(0, keyword_search_view)
-    keywords = keywords[:5]
-    request.session["keywords"] = keywords
-    request.session.set_expiry(86400)
-    return HttpResponse(f"Tracked Keywords: {keywords}")
+    if request.user.is_superuser:
+        keywords = request.session.get("keywords", [])
+        keywords.insert(0, keyword_search_view)
+        keywords = keywords[:5]
+        request.session["keywords"] = keywords
+        request.session.set_expiry(86400)
+        return HttpResponse(f"Tracked Keywords: {keywords}")
+    else:
+        return HttpResponse('YOU ONT HAVE ACCESS')
+
 
 def get_recent_keywords(request):
     keywords = request.session.get("keywords", [])
@@ -182,21 +182,25 @@ def get_recent_keywords(request):
 
 
 def empty_keywords(request):
-    del request.session['keywords']
-    keyword_search_view = list()
-    # return HttpResponse("data deleted!")
-    return redirect ('cookie_session_handling')
-
+    if request.user.is_superuser:
+        del request.session['keywords']
+        keyword_search_view = list()
+        # return HttpResponse("data deleted!")
+        return redirect ('cookie_session_handling')
+    else:
+        return HttpResponse('YOU ONT HAVE ACCESS')
 
 
 def track_ratings(request):
-    ratings = request.session.get("ratings", {})
-    print(recent_rate_session)
-    request.session["ratings"] = recent_rate_session
-    request.session.set_expiry(86400)
-    # return redirect("get_recent_ratings")
-    return HttpResponse(f"Tracked Ratings: {ratings}")
-
+    if request.user.is_superuser:
+        ratings = request.session.get("ratings", {})
+        print(recent_rate_session)
+        request.session["ratings"] = recent_rate_session
+        request.session.set_expiry(86400)
+        # return redirect("get_recent_ratings")
+        return HttpResponse(f"Tracked Ratings: {ratings}")
+    else:
+        return HttpResponse('YOU ONT HAVE ACCESS')
 
 
 def get_recent_ratings(request):
@@ -204,24 +208,13 @@ def get_recent_ratings(request):
     return render(request, "cookie_session/index.html", {"ratings": ratings})
 
 def empty_ratings(request):
-    del request.session["ratings"]
-    recent_rate_session = list()
-    return redirect("cookie_session_handling")
+    if request.user.is_superuser:
+        del request.session["ratings"]
+        recent_rate_session = list()
+        return redirect("cookie_session_handling")
 
-
-
-
-
-#login
-
-# def check_request_user(request):
-#     return HttpResponse (f'{request.user} - {request.user.is_authenticated}')
-
-
-
-# def check_request_user_template(request):
-#     return render(request , 'check_request_user.html')
-
+    else:
+        return HttpResponse('YOU ONT HAVE ACCESS')
 
 
 def custom_login(request):

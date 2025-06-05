@@ -6,7 +6,7 @@ from blog.models.models import SearchSubject, InputSearch,VoteByUser,Contactmode
 class searchFormSubject(forms.ModelForm):
     class Meta:
         model = SearchSubject
-        fields = ['custom_field']
+        fields = ['Tag_field']
 class SearchFormInput(forms.ModelForm):
     class Meta:
         model = InputSearch
@@ -21,3 +21,4 @@ class ContactUsForm(forms.ModelForm):
     class Meta:
         model = Contactmodel
         fields = ['name','email','subject','message']
+

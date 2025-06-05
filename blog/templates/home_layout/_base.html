@@ -8,17 +8,36 @@
 </head>
 <body>
     <header>
-        <div class="p-1 mb-1 bg-primary-subtle text-primary-emphasis">
-            <div>
-                <a href="{% url "cookie_session_handling" %}">
-                    <button type="submit">SessionAndCookies</button>
-                </a>
-            </div>
-                <a href="{% url "contactus" %}">
-                    <button type="submit">ContactUs</button>
-                </a>
-            </div>
-            <p class="text-center fs-2 fw-bold fst-italic">This blog contains articles</p>
+        <div class="shadow-sm p-3 mb-5 bg-body-tertiary rounded">
+            <nav class="navbar bg-body-tertiary">
+              <div class="container-fluid">
+                <a class="navbar-brand">
+                    <img src="{% static 'blog_icon/stack.svg' %}"
+                     alt="Logo" width="30" height="24" class="d-inline-block align-text-top">
+                    ArticleWebsite</a>
+
+                <div class="btn-group" role="group" aria-label="Basic outlined example">
+                    <a href="{% url 'login_page' %}">
+                        <button type="button" class="btn btn-outline-secondary">logIn</button>
+                    </a>
+                    <a href="{% url 'logout_page' %}">
+                        <button type="button" class="btn btn-outline-secondary">LogOut</button>
+                    </a>
+                    <a href="{% url 'signup' %}">
+                        <button type="button" class="btn btn-outline-secondary">SignUp</button>
+                    </a>
+                    <a href="{% url 'write' %}">
+                        <button type="button" class="btn btn-outline-secondary">Write</button>
+                    </a>
+                    <a href="{% url 'cookie_session_handling' %}">
+                        <button type="button" class="btn btn-outline-secondary">Session</button>
+                    </a>
+                    <a href="{% url 'contactus' %}">
+                        <button type="button" class="btn btn-outline-secondary">ContactUs</button>
+                    </a>
+                </div>
+              </div>
+            </nav>
         </div>
     </header>
     <main>{% block content %}{% endblock %}</main>

@@ -5,7 +5,8 @@ __all__= [
     'searchFormSubject',
     'SearchFormInput',
     'VoteByUserForm',
-    'ContactUsForm'
+    'ContactUsForm',
+
 ]
 
 from blog.forms.log_in_out import LoginCustomForm

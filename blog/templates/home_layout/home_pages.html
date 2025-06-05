@@ -1,0 +1,34 @@
+{% extends 'home_layout/_base.html' %} {% block content %}
+<div class="overflow-auto">
+    <div class="d-flex flex-column mb-3">
+    {% for item in post_list %}
+        <h2>{{ item.title }}</h2>
+            <p class="fst-italic">{{ item.authors.first_name }}</p>
+            <p>{{ item.description }}</p>
+            <p>{{ item.rate }}</p>
+        <div class="d-flex flex-row mb-3">
+            <a href="http://127.0.0.1:8000/edit/{{ item.id }}">
+                <button type="submit" class="btn btn-outline-secondary">EditePost</button>
+            </a>
+            <a href="http://127.0.0.1:8000/report/{{ item.id }}">
+                <button type="submit" class="btn btn-outline-secondary">ReportPost</button>
+            </a>
+
+        <form method="post">
+            {% csrf_token %}
+            <label for="id_field"></label>
+            <input type="text" name="id_field" id="id_field" value="{{ item.id }}">
+            {{ form.custom_field }}
+        <button type="submit" class="btn btn-outline-secondary">submit rate</button>
+        </form>
+        </div>
+
+    {% endfor %}
+    </div>
+    <div>
+        <a href="{% url "home" %}">
+            <button type="submit" class="btn btn-dark">return to home page</button>
+        </a>
+    </div>
+</div>
+{% endblock %}
